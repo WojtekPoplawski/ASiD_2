@@ -1,60 +1,62 @@
 package bin;
 
-import java.nio.file.Path;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 public class MegreSort {
-    int[] tab={10,1,9,2,8,3,7,4,6,5};
-    int n=10;
-    int tout[];
 
-    public MegreSort() {
-        this.tout=Divide(n,0,tab);
+    public MegreSort() throws FileNotFoundException {
+        PrintWriter out = new PrintWriter("Out0201.txt");
+        Scanner in = new Scanner(new File("In0201.txt"));
+        int n = in.nextInt();
+        int[] tab = new int[n];
+        for(int i=0;i<n;i++){
+            tab[i]=in.nextInt();
+        }
+        f(tab,n);
+        for(int i=0;i<n;i++){
+            out.print(tab[i]+" ");
+        }
+        out.close();
     }
-
-    void In(Path path){
-
+    void f(int[] inTab,int n){
+        if(n<2){
+            return;
+        }
+        int x=n/2;
+        int[] lTab=new int[x];
+        int[] rTab=new int[n-x];
+        System.arraycopy(inTab, 0, lTab, 0, x);
+        System.arraycopy(inTab, x, rTab, 0, n - x);
+        f(lTab,x);
+        f(rTab,n-x);
+        g(inTab,lTab,rTab,x,n-x);
     }
-
-    int[] MS(int n,int[] tinl,int[] tinr) {
-        int tout[] = new int[n];
-        int i, l = 0, r = 0;
-        if (n == 2) {
-            tout[0] = tinl[0];
-            tout[1] = tinr[0];
-        } else{
-            for (i = 0; i < n; i++) {
-                if (tinl[l] > tinr[r]) {
-                    tout[i] = tinr[r];
-                    r++;
-                } else {
-                    tout[i] = tinl[l];
-                    l++;
-                }
-                if (r > n / 2 - 1 || l > n / 2 - 1) break;
+    void g(int[] inTab,int[] lTab,int[] rTab,int l,int r){
+        int x=0,y=0,z=0;
+        while(x<l && y<r){
+            if(lTab[x]<=rTab[y]){
+                inTab[z]=lTab[x];
+                z++;
+                x++;
+            }
+            else {
+                inTab[z]=rTab[y];
+                z++;
+                y++;
             }
         }
-        return tout;
-    }
-
-    int[] Divide(int end, int start, int[] tab){
-        int x=end-start-1;
-        int tinl[]=new int[end/2];
-        int tinr[]=new int[end/2];
-        int tout[];
-        if(x==0){
-            return tab;
+        while(x<l){
+            inTab[z]=lTab[x];
+            z++;
+            x++;
         }
-        for(int i=0;i<end/2;i++){
-            tinl[i]=tab[i];
+        while(y<r){
+            inTab[z]=rTab[y];
+            z++;
+            y++;
         }
-        for(int i=0;i<end/2;i++){
-            tinr[i]=tab[i+end/2];
-        }
-        if(x>2){
-            tinl=Divide(end/2,start,tinl);
-            tinr=Divide(end/2,start,tinr);
-        }
-        tout=MS(end,tinr,tinl);
-        return tout;
     }
 }
