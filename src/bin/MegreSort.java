@@ -51,8 +51,8 @@ public class MegreSort {
             tinr[i]=tab[i+end/2];
         }
         if(x>2){
-            Divide(end/2,start,tinl);
-            Divide(end/2,start,tinr);
+            tinl=Divide(end/2,start,tinl);
+            tinr=Divide(end/2,start,tinr);
         }
         tout=MS(end,tinr,tinl);
         return tout;
